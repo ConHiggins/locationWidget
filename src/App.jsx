@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 function App() {
     const [userCoords, setUserCoords] = useState();
     const [weatherData, setWeatherData] = useState();
+    const [forecastData, setForecastData] = useState();
+    const [forecast, setForecast] = useState();
 
     const key = process.env.REACT_APP_API_KEY;
 
@@ -37,11 +39,40 @@ function App() {
         }
     };
 
+    const fetchForecast = async () => {
+        try {
+            const response = await fetch(
+                `https://api.weatherapi.com/v1/forecast.json?key=${key}&q=${userCoords}`
+            );
+            if (!response.ok) {
+                throw new Error(response.status + " error with request");
+            }
+            setForecastData(await response.json());
+
+            console.log(forecastData);
+        } catch (error) {
+            alert(error.message);
+        }
+    };
+
     useEffect(() => {
         if (userCoords) {
             fetchWeather();
+            fetchForecast();
+
+            console.log(forecast);
         }
     }, [userCoords]);
+
+    useEffect(() => {
+        if (forecastData) {
+            setForecast(
+                forecastData?.forecast.forecastday[0].hour.map((d) => {
+                    return <img src={d.condition.icon} key={d.time_epoch} />;
+                })
+            );
+        }
+    }, [forecastData]);
 
     return (
         <div className="App">
@@ -53,6 +84,7 @@ function App() {
                     </h1>
                     <img src={weatherData?.current.condition.icon} />
                     <h1>{weatherData?.current.condition.text}</h1>
+                    <h1>{forecast}</h1>
                 </>
             )}
             <button onClick={getUserCoords}>Get weather near me</button>
