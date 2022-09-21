@@ -3,8 +3,8 @@ import "./App.css";
 import { useEffect, useState } from "react";
 
 function App() {
-    const [userCoords, setUserCoords] = useState("");
-    const [weatherData, setWeatherData] = useState({});
+    const [userCoords, setUserCoords] = useState();
+    const [weatherData, setWeatherData] = useState();
 
     const key = process.env.REACT_APP_API_KEY;
 
@@ -48,12 +48,14 @@ function App() {
             {weatherData && (
                 <>
                     <h1>
-                        {userCoords} <br /> {weatherData.location.name}
+                        {userCoords} <br /> {weatherData?.location.name}, <br />{" "}
+                        {weatherData?.location.region}
                     </h1>
-                    <h1>{weatherData.current.condition.text}</h1>
-                    <button onClick={getUserCoords}>Get my location</button>
+                    <img src={weatherData?.current.condition.icon} />
+                    <h1>{weatherData?.current.condition.text}</h1>
                 </>
             )}
+            <button onClick={getUserCoords}>Get weather near me</button>
         </div>
     );
 }
