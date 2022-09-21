@@ -4,8 +4,7 @@ import { useEffect, useState } from "react";
 
 function App() {
     const [userCoords, setUserCoords] = useState("");
-    const [userArea, setUserArea] = useState("");
-    const [weatherData, setWeatherData] = useState("");
+    const [weatherData, setWeatherData] = useState({});
 
     const key = process.env.REACT_APP_API_KEY;
 
@@ -31,9 +30,8 @@ function App() {
             if (!weatherResponse.ok) {
                 throw new Error(weatherResponse.status + " error with request");
             }
-            const data = await weatherResponse.json();
-            console.log(data);
-            setUserArea(data.location.name);
+            setWeatherData(await weatherResponse.json());
+            console.log(weatherData);
         } catch (error) {
             alert(error.message);
         }
@@ -47,12 +45,15 @@ function App() {
 
     return (
         <div className="App">
-            <h1>
-                {userCoords} <br /> {userArea}
-            </h1>
-            <h1>{weatherData}</h1>
-            <button onClick={getUserCoords}>Get my location</button>
-            <button onClick={fetchWeather}>Get weather</button>
+            {weatherData && (
+                <>
+                    <h1>
+                        {userCoords} <br /> {weatherData.location.name}
+                    </h1>
+                    <h1>{weatherData.current.condition.text}</h1>
+                    <button onClick={getUserCoords}>Get my location</button>
+                </>
+            )}
         </div>
     );
 }
