@@ -2,6 +2,7 @@ import logo from "./logo.svg";
 import "./App.css";
 import { useEffect, useState } from "react";
 import WeatherBlock from "./components/WeatherBlock/WeatherBlock";
+import SportsBlock from "./components/SportsBlock/SportsBlock";
 
 function App() {
     const [acceptedLocationTrack, setAcceptedLocationTrack] = useState(false);
@@ -89,7 +90,6 @@ function App() {
             const startTime =
                 forecastData?.forecast.forecastday[0].hour.findIndex((h) => {
                     const d = new Date();
-                    console.log(d.getHours());
                     return h.time.substring(11, 13) > d.getHours();
                 });
 
@@ -116,15 +116,36 @@ function App() {
             {acceptedLocationTrack && (
                 <>
                     <h1>
-                        {userCoords} <br /> {weatherData?.location.name}, <br />{" "}
+                        {userCoords} {weatherData?.location.name}
+                        {","}
                         {weatherData?.location.region}
                     </h1>
-                    <WeatherBlock
-                        conditionIcon={weatherData?.current.condition.icon}
-                        condition={weatherData?.current.condition.text}
-                        forecast={forecast}
-                    />
-                    <button onClick={console.log(forecastData)}>check</button>
+                    <div className="blocks-container">
+                        <WeatherBlock
+                            conditionIcon={weatherData?.current.condition.icon}
+                            condition={weatherData?.current.condition.text}
+                            temp={weatherData?.current.temp_c}
+                            forecast={forecast}
+                            sunrise={
+                                forecastData?.forecast.forecastday[0].astro
+                                    .sunrise
+                            }
+                            sunset={
+                                forecastData?.forecast.forecastday[0].astro
+                                    .sunset
+                            }
+                            moonrise={
+                                forecastData?.forecast.forecastday[0].astro
+                                    .moonrise
+                            }
+                            moonset={
+                                forecastData?.forecast.forecastday[0].astro
+                                    .moonset
+                            }
+                        />
+                        <SportsBlock footballMatches={sportsData?.football} />
+                    </div>
+                    <button onClick={console.log(sportsData)}>check</button>
                 </>
             )}
             {!acceptedLocationTrack && (
@@ -133,7 +154,9 @@ function App() {
                         We need to track your location to fetch information for
                         your area
                     </h1>
-                    <button onClick={getUserCoords}>I'm okay with this</button>
+                    <button className="start-button" onClick={getUserCoords}>
+                        I'm okay with this
+                    </button>
                 </>
             )}
         </div>
