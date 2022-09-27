@@ -7,12 +7,26 @@ import SportsBlock from "./components/SportsBlock/SportsBlock";
 function App() {
     const [acceptedLocationTrack, setAcceptedLocationTrack] = useState(false);
     const [userCoords, setUserCoords] = useState();
+    let lat, long;
+
     const [weatherData, setWeatherData] = useState();
     const [forecastData, setForecastData] = useState();
     const [forecast, setForecast] = useState();
+
     const [sportsData, setSportsData] = useState();
 
     const key = process.env.REACT_APP_API_KEY;
+
+    const d = new Date();
+    let greeting = "";
+
+    if (d.getHours() <= 11) {
+        greeting = "Good morning!";
+    } else if (d.getHours() > 11 && d.getHours() < 18) {
+        greeting = "Good afternoon!";
+    } else {
+        greeting = "Good evening,";
+    }
 
     const showPosition = (position) => {
         setUserCoords(
@@ -27,6 +41,10 @@ function App() {
         } else {
             setUserCoords("Geolocation is not supported by this browser");
         }
+    };
+
+    const updateCoords = (lat, long) => {
+        setUserCoords(`${lat},${long}`);
     };
 
     const fetchWeather = async () => {
@@ -79,9 +97,6 @@ function App() {
             fetchWeather();
             fetchForecast();
             fetchSports();
-
-            console.log(forecast);
-            console.log(sportsData);
         }
     }, [userCoords]);
 
@@ -115,11 +130,45 @@ function App() {
         <div className="App">
             {acceptedLocationTrack && (
                 <>
-                    <h1>
-                        {userCoords} {weatherData?.location.name}
-                        {","}
-                        {weatherData?.location.region}
-                    </h1>
+                    <div>
+                        <h1 className="location-data">
+                            {userCoords} {weatherData?.location.name}
+                            {","}
+                            {weatherData?.location.region}
+                        </h1>
+                        <fieldset>
+                            <legend>Set latitude:</legend>
+                            <input
+                                type="number"
+                                onChange={(e) => {
+                                    lat = e.target.value;
+                                }}
+                            />
+                        </fieldset>
+                        <fieldset>
+                            <legend>Set longitude:</legend>
+                            <input
+                                type="number"
+                                onChange={(e) => {
+                                    long = e.target.value;
+                                }}
+                            />
+                        </fieldset>
+                        <button
+                            onClick={() => {
+                                updateCoords(lat, long);
+                            }}
+                        >
+                            Update location
+                        </button>
+                        <button
+                            onClick={() => {
+                                getUserCoords();
+                            }}
+                        >
+                            Reset to my location
+                        </button>
+                    </div>
                     <div className="blocks-container">
                         <WeatherBlock
                             conditionIcon={weatherData?.current.condition.icon}
@@ -145,14 +194,13 @@ function App() {
                         />
                         <SportsBlock footballMatches={sportsData?.football} />
                     </div>
-                    <button onClick={console.log(sportsData)}>check</button>
                 </>
             )}
             {!acceptedLocationTrack && (
                 <>
                     <h1>
-                        We need to track your location to fetch information for
-                        your area
+                        {greeting} <br /> We need to track your location to
+                        fetch information for your area
                     </h1>
                     <button className="start-button" onClick={getUserCoords}>
                         I'm okay with this
