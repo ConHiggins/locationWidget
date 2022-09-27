@@ -1,0 +1,24 @@
+.weatherblock {
+
+    width: 50vw ;
+    box-shadow: 0 0.5rem 0.7rem 0.5rem lightgray inset, 0 0 0.5rem 0.2rem lightgray;
+    padding: 2rem;
+    background-color: rgb(235, 232, 232);
+    transition: box-shadow 0.3s ease, background-color 0.3s ease;
+
+    &:hover{
+        box-shadow:  inset 0 0 1rem 0 lightgray, 0.2rem 1rem 1rem 0.5rem lightgray;
+        background-color: whitesmoke;
+    }
+}
+
+.forecast{
+
+    position: relative;
+    left: 20%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+
+}

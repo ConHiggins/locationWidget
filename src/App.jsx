@@ -1,12 +1,15 @@
 import logo from "./logo.svg";
 import "./App.css";
 import { useEffect, useState } from "react";
+import WeatherBlock from "./components/WeatherBlock/WeatherBlock";
 
 function App() {
+    const [acceptedLocationTrack, setAcceptedLocationTrack] = useState(false);
     const [userCoords, setUserCoords] = useState();
     const [weatherData, setWeatherData] = useState();
     const [forecastData, setForecastData] = useState();
     const [forecast, setForecast] = useState();
+    const [sportsData, setSportsData] = useState();
 
     const key = process.env.REACT_APP_API_KEY;
 
@@ -17,6 +20,7 @@ function App() {
     };
 
     const getUserCoords = () => {
+        setAcceptedLocationTrack(true);
         if (navigator.geolocation) {
             return navigator.geolocation.getCurrentPosition(showPosition);
         } else {
@@ -55,39 +59,83 @@ function App() {
         }
     };
 
+    const fetchSports = async () => {
+        try {
+            const response = await fetch(
+                `https://api.weatherapi.com/v1/sports.json?key=${key}&q=${userCoords}`
+            );
+            if (!response.ok) {
+                throw new Error(response.status + " error with request");
+            }
+            setSportsData(await response.json());
+        } catch (error) {
+            alert(error.message);
+        }
+    };
+
     useEffect(() => {
         if (userCoords) {
             fetchWeather();
             fetchForecast();
+            fetchSports();
 
             console.log(forecast);
+            console.log(sportsData);
         }
     }, [userCoords]);
 
     useEffect(() => {
         if (forecastData) {
+            const startTime =
+                forecastData?.forecast.forecastday[0].hour.findIndex((h) => {
+                    const d = new Date();
+                    console.log(d.getHours());
+                    return h.time.substring(11, 13) > d.getHours();
+                });
+
             setForecast(
-                forecastData?.forecast.forecastday[0].hour.map((d) => {
-                    return <img src={d.condition.icon} key={d.time_epoch} />;
-                })
+                forecastData?.forecast.forecastday[0].hour
+                    .splice(startTime, startTime + 10)
+                    .map((d) => {
+                        return (
+                            <div className="forecast-bit">
+                                <img
+                                    src={d.condition.icon}
+                                    key={d.time_epoch}
+                                />
+                                <p>{d.time.substring(11, 16)}</p>
+                            </div>
+                        );
+                    })
             );
         }
     }, [forecastData]);
 
     return (
         <div className="App">
-            {weatherData && (
+            {acceptedLocationTrack && (
                 <>
                     <h1>
                         {userCoords} <br /> {weatherData?.location.name}, <br />{" "}
                         {weatherData?.location.region}
                     </h1>
-                    <img src={weatherData?.current.condition.icon} />
-                    <h1>{weatherData?.current.condition.text}</h1>
-                    <h1>{forecast}</h1>
+                    <WeatherBlock
+                        conditionIcon={weatherData?.current.condition.icon}
+                        condition={weatherData?.current.condition.text}
+                        forecast={forecast}
+                    />
+                    <button onClick={console.log(forecastData)}>check</button>
                 </>
             )}
-            <button onClick={getUserCoords}>Get weather near me</button>
+            {!acceptedLocationTrack && (
+                <>
+                    <h1>
+                        We need to track your location to fetch information for
+                        your area
+                    </h1>
+                    <button onClick={getUserCoords}>I'm okay with this</button>
+                </>
+            )}
         </div>
     );
 }
