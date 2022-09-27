@@ -14,6 +14,19 @@
         box-shadow:  inset 0 0 1rem 0 lightgray, 0.2rem 1rem 1rem 0.5rem lightgray;
         background-color: whitesmoke;
 
+        .sphere {
+            opacity: 1;
+
+            &-up{
+                top: 25%;
+                
+            }
+
+            &-down {
+                top: 75%;
+            }
+        }
+
         .astroblock {
             
             &-bg {
@@ -79,6 +92,33 @@
         
     }
 }
+
+.sphere {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.3s ease, top 1s ease;
+    position: absolute;
+
+    &-up {
+        top: 100%;
+        left: 10%;
+    }
+
+    &-down{
+        top: 0;
+    }
+
+    &-sun {
+        background: #f4a261;
+    }
+
+    &-moon {
+        background: whitesmoke;
+    }
+}
+
 
 .bg-sunrise {
     background: linear-gradient( #f4a261, #264653);
