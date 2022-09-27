@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/locationWidget/static/css/main.073c9b0a.css",
-    "main.js": "/locationWidget/static/js/main.e8778774.js",
+    "main.css": "/locationWidget/static/css/main.15d9cd10.css",
+    "main.js": "/locationWidget/static/js/main.d7d24cb9.js",
     "static/js/787.543ce16e.chunk.js": "/locationWidget/static/js/787.543ce16e.chunk.js",
     "static/media/logo.svg": "/locationWidget/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
     "index.html": "/locationWidget/index.html",
-    "main.073c9b0a.css.map": "/locationWidget/static/css/main.073c9b0a.css.map",
-    "main.e8778774.js.map": "/locationWidget/static/js/main.e8778774.js.map",
+    "main.15d9cd10.css.map": "/locationWidget/static/css/main.15d9cd10.css.map",
+    "main.d7d24cb9.js.map": "/locationWidget/static/js/main.d7d24cb9.js.map",
     "787.543ce16e.chunk.js.map": "/locationWidget/static/js/787.543ce16e.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.073c9b0a.css",
-    "static/js/main.e8778774.js"
+    "static/css/main.15d9cd10.css",
+    "static/js/main.d7d24cb9.js"
   ]
 }
