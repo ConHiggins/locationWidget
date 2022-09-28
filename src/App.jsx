@@ -3,6 +3,7 @@ import "./App.css";
 import { useEffect, useState } from "react";
 import WeatherBlock from "./components/WeatherBlock/WeatherBlock";
 import SportsBlock from "./components/SportsBlock/SportsBlock";
+import Compass from "./components/Compass/Compass";
 
 function App() {
     const [acceptedLocationTrack, setAcceptedLocationTrack] = useState(false);
@@ -130,11 +131,12 @@ function App() {
         <div className="App">
             {acceptedLocationTrack && (
                 <>
-                    <div>
+                    <div className="homepage">
                         <h1 className="location-data">
                             {userCoords} {weatherData?.location.name}
-                            {","}
-                            {weatherData?.location.region}
+                            {", "}
+                            {weatherData?.location.region} <br />
+                            {d.getHours()}:{d.getMinutes()}
                         </h1>
                         <fieldset>
                             <legend>Set latitude:</legend>
@@ -192,12 +194,21 @@ function App() {
                                     .moonset
                             }
                         />
-                        <SportsBlock footballMatches={sportsData?.football} />
+                        <div className="right_column">
+                            <SportsBlock
+                                footballMatches={sportsData?.football}
+                            />
+                            <Compass
+                                windDir={weatherData?.current.wind_dir}
+                                windSpd={weatherData?.current.wind_mph}
+                                windDeg={weatherData?.current.wind_degree}
+                            />
+                        </div>
                     </div>
                 </>
             )}
             {!acceptedLocationTrack && (
-                <>
+                <div className="start-page">
                     <h1>
                         {greeting} <br /> We need to track your location to
                         fetch information for your area
@@ -205,7 +216,7 @@ function App() {
                     <button className="start-button" onClick={getUserCoords}>
                         I'm okay with this
                     </button>
-                </>
+                </div>
             )}
         </div>
     );
